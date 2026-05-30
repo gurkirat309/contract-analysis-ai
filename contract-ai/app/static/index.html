@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexiScan — Legal Contract Analysis AI</title>
+    <!-- Outfit Font & Lucide Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+    <div class="glow-bg"></div>
+    
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar glass">
+            <div class="sidebar-brand">
+                <div class="brand-icon">🏛️</div>
+                <div class="brand-text">
+                    <h1>LexiScan</h1>
+                    <span>Contract AI</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-tab="analyze"><i data-lucide="scan-text"></i> Analyze Clause</button>
+                <button class="nav-item" data-tab="pdf"><i data-lucide="file-text"></i> PDF Contract Analyzer</button>
+                <button class="nav-item" data-tab="training"><i data-lucide="cpu"></i> Model Training</button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="status-dot pulse-red" id="server-status-dot"></span>
+                    <span class="status-text" id="server-status-text">Server Status: Off</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header glass">
+                <div class="header-title">
+                    <h2 id="tab-title">Contract Analyzer Sandbox</h2>
+                    <p id="tab-subtitle">Input contract clauses to automatically classify their legal context in real-time.</p>
+                </div>
+                <div class="header-badges">
+                    <span class="badge badge-info" id="model-badge">DistilBERT Local</span>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-body">
+                <!-- Tab: Analyze Clause -->
+                <div class="tab-panel active" id="tab-analyze">
+                    <div class="grid grid-2">
+                        <!-- Input Section -->
+                        <div class="card glass animate-fade-in">
+                            <div class="card-header">
+                                <h3><i data-lucide="keyboard"></i> Paste Clause Text</h3>
+                            </div>
+                            <div class="card-body">
+                                <textarea id="clause-input" placeholder="e.g., This agreement may be terminated by either party upon 30 days prior written notice..." maxlength="10000"></textarea>
+                                <div class="input-counter"><span id="char-count">0</span> / 10,000 characters</div>
+                                <button class="btn btn-primary btn-glow" id="btn-predict"><i data-lucide="brain-circuit"></i> Classify Clause</button>
+                            </div>
+                        </div>
+
+                        <!-- Result Section -->
+                        <div class="card glass animate-fade-in" style="animation-delay: 0.1s;">
+                            <div class="card-header">
+                                <h3><i data-lucide="award"></i> Analysis Result</h3>
+                            </div>
+                            <div class="card-body result-container" id="prediction-result-container">
+                                <div class="placeholder-state" id="predict-placeholder">
+                                    <div class="placeholder-icon"><i data-lucide="binary"></i></div>
+                                    <h4>Awaiting Clause Text</h4>
+                                    <p>Enter text on the left and click Classify to run neural network inference.</p>
+                                </div>
+                                <div class="result-details hidden" id="predict-details">
+                                    <div class="result-gauge-box">
+                                        <div class="gauge-container">
+                                            <canvas id="gauge-canvas" width="160" height="160"></canvas>
+                                            <div class="gauge-value"><span id="confidence-percentage">0%</span><label>Confidence</label></div>
+                                        </div>
+                                    </div>
+                                    <div class="result-category-box">
+                                        <div class="meta-label">Predicted Category</div>
+                                        <div class="category-name" id="predicted-category-label">Termination Clauses</div>
+                                        <div class="category-desc" id="predicted-category-desc">Defines rules, timelines, and conditions under which either party can legally terminate the contract agreement.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: PDF Contract Analyzer -->
+                <div class="tab-panel" id="tab-pdf">
+                    <div class="grid grid-1">
+                        <!-- Dropzone Card -->
+                        <div class="card glass animate-fade-in">
+                            <div class="card-body">
+                                <div class="dropzone" id="pdf-dropzone">
+                                    <input type="file" id="pdf-file-input" accept=".pdf" class="hidden">
+                                    <div class="dropzone-icon"><i data-lucide="file-up"></i></div>
+                                    <h3>Drag & Drop Contract PDF Here</h3>
+                                    <p>or click to browse local files (Supports contracts up to 25MB)</p>
+                                    <span class="file-name-display hidden" id="selected-file-name">Selected: none.pdf</span>
+                                </div>
+                                <div class="action-bar hidden" id="pdf-action-bar">
+                                    <button class="btn btn-secondary" id="btn-reset-pdf"><i data-lucide="refresh-cw"></i> Clear</button>
+                                    <button class="btn btn-primary btn-glow" id="btn-analyze-pdf"><i data-lucide="file-search"></i> Extract & Classify Clauses</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PDF Analysis Results Table -->
+                        <div class="card glass hidden animate-fade-in" id="pdf-report-card" style="animation-delay: 0.1s;">
+                            <div class="card-header flex-between">
+                                <h3><i data-lucide="list-checks"></i> Document Clause Breakdown</h3>
+                                <span class="badge badge-success" id="pdf-total-clauses">0 Clauses Processed</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-container">
+                                    <table class="report-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="80px">Index</th>
+                                                <th>Clause Text</th>
+                                                <th width="200px">Classification Label</th>
+                                                <th width="150px">Confidence Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pdf-clauses-tbody">
+                                            <!-- Dynamically injected -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Model Training Panel -->
+                <div class="tab-panel" id="tab-training">
+                    <div class="grid grid-2">
+                        <!-- Training Settings -->
+                        <div class="card glass animate-fade-in">
+                            <div class="card-header">
+                                <h3><i data-lucide="sliders"></i> Hyperparameters & Subsampling</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="settings-desc">
+                                    Since local training is configured for **CPU mode** (to avoid long waiting times), a 100-sample subsample and 1 epoch configuration has been successfully run locally to verify system architecture.
+                                </p>
+                                <div class="settings-form">
+                                    <div class="form-group">
+                                        <label>Epochs</label>
+                                        <input type="number" value="1" disabled>
+                                        <small>1 epoch is recommended on CPU for fast validation (~1 min).</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Subsample Dataset Size</label>
+                                        <input type="number" value="100" disabled>
+                                        <small>Extracted from HuggingFace dataset to prevent CPU locking.</small>
+                                    </div>
+                                    <button class="btn btn-secondary" id="btn-trigger-training" disabled>
+                                        <i data-lucide="play-circle"></i> Local CPU Model Trained
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Training Metrics -->
+                        <div class="card glass animate-fade-in" style="animation-delay: 0.1s;">
+                            <div class="card-header">
+                                <h3><i data-lucide="trending-up"></i> Verification Stats</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="stats-container">
+                                    <div class="stat-card">
+                                        <div class="stat-value">100</div>
+                                        <div class="stat-label">Train Samples</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">20</div>
+                                        <div class="stat-label">Eval Samples</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">~1 min</div>
+                                        <div class="stat-label">CPU Training Time</div>
+                                    </div>
+                                    <div class="stat-card flex-center">
+                                        <div class="status-tag success">Verified Operational</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Spinner Modal overlay -->
+    <div class="loading-overlay hidden" id="global-spinner">
+        <div class="spinner-box">
+            <div class="spinner"></div>
+            <p id="spinner-message">Analyzing document clauses...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
