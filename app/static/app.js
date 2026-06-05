@@ -1,3 +1,7 @@
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? ''
+    : 'YOUR_RENDER_BACKEND_URL'; // Replace this with your actual Render web service URL after deploying
+
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Lucide icons
     lucide.createIcons();
@@ -55,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     async function checkServerHealth() {
         try {
-            const res = await fetch('/api/v1/health');
+            const res = await fetch(`${API_BASE_URL}/api/v1/health`);
             if (res.ok) {
                 const data = await res.json();
                 if (data.model_loaded) {
@@ -175,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         spinner.classList.remove('hidden');
         
         try {
-            const res = await fetch('/api/v1/predict', {
+            const res = await fetch(`${API_BASE_URL}/api/v1/predict`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text })
@@ -281,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('file', selectedFile);
         
         try {
-            const res = await fetch('/api/v1/analyze-pdf', {
+            const res = await fetch(`${API_BASE_URL}/api/v1/analyze-pdf`, {
                 method: 'POST',
                 body: formData
             });

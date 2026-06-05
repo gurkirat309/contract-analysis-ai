@@ -57,25 +57,23 @@ class ModelRegistry:
         model_dir: Path = settings.model_dir
         label_map_path: Path = settings.label_map_path
 
-        if not model_dir.exists():
-            raise ModelNotFoundError(
-                f"Model directory not found: {model_dir}. "
-                "Run the training pipeline first (POST /api/v1/train)."
-            )
+        # If local weights don't exist (e.g. in docker/production), fallback to HuggingFace repository ID
+        model_identifier = str(model_dir) if model_dir.exists() else settings.base_model_name
+
         if not label_map_path.exists():
             raise ModelNotFoundError(
                 f"Label map not found: {label_map_path}. "
                 "Run the training pipeline first (POST /api/v1/train)."
             )
 
-        logger.info("Loading tokenizer from %s …", model_dir)
+        logger.info("Loading tokenizer from %s …", model_identifier)
         self.tokenizer: PreTrainedTokenizerBase = AutoTokenizer.from_pretrained(
-            str(model_dir)
+            model_identifier
         )
 
-        logger.info("Loading model from %s …", model_dir)
+        logger.info("Loading model from %s …", model_identifier)
         self.model: PreTrainedModel = AutoModelForSequenceClassification.from_pretrained(
-            str(model_dir)
+            model_identifier
         )
 
         # Choose device: CUDA → MPS (Apple Silicon) → CPU
