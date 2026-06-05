@@ -1,3 +1,12 @@
+---
+title: Contract Analysis AI
+emoji: 🏛️
+colorFrom: cyan
+colorTo: blue
+sdk: docker
+app_port: 7860
+---
+
 #  Contract Analysis AI — Backend
 > Fine-grained contract clause classification powered by **DistilBERT** + **FastAPI**
 
