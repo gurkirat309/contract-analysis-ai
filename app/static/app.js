@@ -1,6 +1,6 @@
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? ''
-    : 'YOUR_RENDER_BACKEND_URL'; // Replace this with your actual Render web service URL after deploying
+const API_BASE_URL = window.location.hostname.includes('vercel.app')
+    ? 'https://gurki309-contract-analysis-ai.hf.space'
+    : ''; // Automatically uses relative paths when running locally or served directly from HuggingFace
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Lucide icons
