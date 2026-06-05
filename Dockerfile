@@ -23,11 +23,11 @@ RUN uv pip install --system --no-cache --index-strategy unsafe-best-match -r pyp
 COPY app ./app
 COPY models ./models
 
-# Expose FastAPI port
-EXPOSE 8000
+# Expose FastAPI port (Hugging Face Spaces runs on port 7860)
+EXPOSE 7860
 
 # Run in unbuffered mode to ensure log output is visible in production console
 ENV PYTHONUNBUFFERED=1
 
 # Start Uvicorn server
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
