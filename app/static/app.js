@@ -1,6 +1,6 @@
-const API_BASE_URL = window.location.hostname.includes('vercel.app')
-    ? 'https://gurki309-contract-analysis-ai.hf.space'
-    : ''; // Automatically uses relative paths when running locally or served directly from HuggingFace
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.includes('hf.space') || window.location.hostname.includes('huggingface.co')
+    ? ''
+    : 'https://gurki309-contract-analysis-ai.hf.space'; // Fallback to HuggingFace URL for Vercel and custom domains
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Lucide icons
