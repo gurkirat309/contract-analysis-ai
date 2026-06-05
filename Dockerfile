@@ -17,7 +17,7 @@ COPY pyproject.toml uv.lock ./
 
 # Install project dependencies.
 # Uses PyTorch CPU wheel extra index URL to install CPU-only PyTorch, saving ~1.5GB of image size
-RUN uv pip install --system --no-cache -r pyproject.toml --extra-index-url https://download.pytorch.org/whl/cpu
+RUN uv pip install --system --no-cache --index-strategy unsafe-best-match -r pyproject.toml --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Copy application source code
 COPY app ./app
