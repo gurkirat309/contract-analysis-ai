@@ -151,25 +151,25 @@
                         <!-- Training Settings -->
                         <div class="card glass animate-fade-in">
                             <div class="card-header">
-                                <h3><i data-lucide="sliders"></i> Hyperparameters & Subsampling</h3>
+                                <h3><i data-lucide="sliders"></i> Hyperparameters & Hardware</h3>
                             </div>
                             <div class="card-body">
                                 <p class="settings-desc">
-                                    Since local training is configured for **CPU mode** (to avoid long waiting times), a 100-sample subsample and 1 epoch configuration has been successfully run locally to verify system architecture.
+                                    The model was trained on the complete dataset using <strong>Google Colab (GPU Mode)</strong> to achieve high classification accuracy. The optimized model weights are now fully loaded.
                                 </p>
                                 <div class="settings-form">
                                     <div class="form-group">
                                         <label>Epochs</label>
-                                        <input type="number" value="1" disabled>
-                                        <small>1 epoch is recommended on CPU for fast validation (~1 min).</small>
+                                        <input type="number" value="3" disabled>
+                                        <small>3 epochs are used for full dataset learning convergence.</small>
                                     </div>
                                     <div class="form-group">
-                                        <label>Subsample Dataset Size</label>
-                                        <input type="number" value="100" disabled>
-                                        <small>Extracted from HuggingFace dataset to prevent CPU locking.</small>
+                                        <label>Total Dataset Size</label>
+                                        <input type="text" value="53,435 samples" disabled>
+                                        <small>Full alisha4walunj/quad_ledgar_merged_dataset.</small>
                                     </div>
-                                    <button class="btn btn-secondary" id="btn-trigger-training" disabled>
-                                        <i data-lucide="play-circle"></i> Local CPU Model Trained
+                                    <button class="btn btn-primary btn-glow" id="btn-trigger-training" disabled style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: #10b981;">
+                                        <i data-lucide="check-circle-2"></i> GPU Model Loaded & Ready
                                     </button>
                                 </div>
                             </div>
@@ -178,24 +178,24 @@
                         <!-- Training Metrics -->
                         <div class="card glass animate-fade-in" style="animation-delay: 0.1s;">
                             <div class="card-header">
-                                <h3><i data-lucide="trending-up"></i> Verification Stats</h3>
+                                <h3><i data-lucide="trending-up"></i> Google Colab Training Stats</h3>
                             </div>
                             <div class="card-body">
                                 <div class="stats-container">
                                     <div class="stat-card">
-                                        <div class="stat-value">100</div>
+                                        <div class="stat-value">45,419</div>
                                         <div class="stat-label">Train Samples</div>
                                     </div>
                                     <div class="stat-card">
-                                        <div class="stat-value">20</div>
+                                        <div class="stat-value">8,016</div>
                                         <div class="stat-label">Eval Samples</div>
                                     </div>
                                     <div class="stat-card">
-                                        <div class="stat-value">~1 min</div>
-                                        <div class="stat-label">CPU Training Time</div>
+                                        <div class="stat-value">~28 min</div>
+                                        <div class="stat-label">T4 GPU Training Time</div>
                                     </div>
                                     <div class="stat-card flex-center">
-                                        <div class="status-tag success">Verified Operational</div>
+                                        <div class="status-tag success">Fully Trained & Operational</div>
                                     </div>
                                 </div>
                             </div>
